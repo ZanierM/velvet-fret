@@ -32,7 +32,7 @@ body{margin:0;background:var(--ink);color:var(--cream);font-family:var(--f-body)
   background-image:radial-gradient(1200px 500px at 70% -10%, rgba(207,166,80,.10), transparent 60%),radial-gradient(900px 600px at -10% 110%, rgba(142,42,53,.16), transparent 60%);
   background-attachment:fixed}
 [hidden]{display:none!important}
-.wrap{max-width:1260px;margin:0 auto;padding-inline:20px;padding-block:22px 40px;display:flex;flex-direction:column;gap:22px}
+.wrap{max-width:1720px;margin:0 auto;padding-inline:clamp(16px,3vw,48px);padding-block:22px 40px;display:flex;flex-direction:column;gap:22px}
 button,select,input{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
@@ -60,7 +60,7 @@ button,select,input{font:inherit;color:inherit}
 
 /* Kit stage: top-down view from the throne */
 .stage{background:linear-gradient(180deg,#151113,#0d0a0b);border:1px solid var(--line);border-radius:14px;padding:14px}
-.kit{position:relative;width:100%;aspect-ratio:16/10;border-radius:10px;overflow:hidden;user-select:none;-webkit-user-select:none;
+.kit{position:relative;width:min(100%,calc(80vh * 1.6));margin-inline:auto;aspect-ratio:16/10;border-radius:10px;overflow:hidden;user-select:none;-webkit-user-select:none;
   background:
     radial-gradient(ellipse 46% 50% at 50% 56%, rgba(0,0,0,0) 0 97%, rgba(207,166,80,.35) 97.5%, rgba(0,0,0,0) 99%),
     repeating-radial-gradient(ellipse at 50% 56%, rgba(255,255,255,.025) 0 2px, transparent 2px 6px),
@@ -154,8 +154,9 @@ input[type=range]{width:120px;accent-color:var(--brass)}
 .keys b{font-family:var(--f-mono);font-weight:500;color:var(--cream);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-right:4px}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));translate:-50% 0;background:var(--panel-2);border:1px solid var(--brass-dim);padding:8px 14px;border-radius:999px;font-size:13px;transition:opacity .3s;pointer-events:none}
 
+@media (max-width:1100px){.keys{display:none}}
 @media (max-width:760px){
-  .kit{aspect-ratio:10/11}
+  .kit{aspect-ratio:10/11;width:100%}
   .pc{left:calc(var(--xm)*1%);top:calc(var(--ym)*1%);width:calc(var(--dm)*1%)}
   .pc.kick{height:calc(var(--hm)*1%)}
   .kit.machine .pc.kick{width:calc(var(--dm2)*1%)}

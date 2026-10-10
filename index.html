@@ -19,18 +19,19 @@
   --brass:#cfa650;
   --brass-dim:#7d6230;
   --oxblood:#8e2a35;
+  --good:#86b36b;
   --f-display:"Bodoni Moda","Didot","Bodoni 72",Georgia,serif;
   --f-label:"Big Shoulders Display","Oswald","Arial Narrow",Impact,sans-serif;
   --f-body:"Libre Franklin","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
-  --row:34px;
+  --row:clamp(32px,2.35vw,46px);
   color-scheme:dark;
 }
 html,body{height:auto}
 body{background:var(--ink);color:var(--cream);font-family:var(--f-body);font-size:14px;
   background-image:radial-gradient(1200px 500px at 70% -10%, rgba(207,166,80,.10), transparent 60%),radial-gradient(900px 600px at -10% 110%, rgba(142,42,53,.16), transparent 60%);
   background-attachment:fixed}
-.wrap{max-width:1260px;margin:0 auto;padding-inline:20px;padding-block:22px 40px;display:flex;flex-direction:column;gap:22px}
+.wrap{max-width:1720px;margin:0 auto;padding-inline:clamp(16px,3vw,48px);padding-block:22px 40px;display:flex;flex-direction:column;gap:22px}
 button,select,input{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 
@@ -78,6 +79,45 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .chk{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--cream);cursor:pointer;padding-block:7px}
 .chk input{accent-color:var(--brass)}
 
+/* Collapsible library + compact settings */
+.libtoggle{display:inline-flex;align-items:center;gap:8px}
+.libtoggle .chev{display:inline-block;transition:rotate .15s}
+.libtoggle[aria-expanded="true"] .chev{rotate:180deg}
+.lib .padhead{align-items:center}
+#libBody{margin-top:12px}
+.morebtn{display:none}
+/* Tuner */
+.tbtn{background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:13px;color:var(--cream)}
+.tbtn:hover{border-color:var(--brass-dim)}
+.tbtn[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+.tbtn.live{background:var(--oxblood);border-color:var(--oxblood);color:var(--cream)}
+.tuner{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:14px}
+.tun-head{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;justify-content:space-between}
+.tun-head .section-lab{margin:0}
+.tun-body{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:18px 28px;align-items:center}
+.gauge{position:relative;text-align:center}
+.gauge svg{display:block;width:100%;height:auto}
+.gauge .tnote{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:56px;line-height:1;color:var(--cream);margin-top:-46px}
+.gauge .tnote sub{font-family:var(--f-mono);font-style:normal;font-size:14px;color:var(--mute);vertical-align:baseline;margin-left:2px}
+.gauge.good .tnote{color:var(--good)}
+.gauge .tread{font-family:var(--f-mono);font-size:12px;color:var(--mute);margin-top:6px;font-variant-numeric:tabular-nums}
+.gauge .tdir{font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:13px;margin-top:4px;min-height:18px;color:var(--brass)}
+.gauge.good .tdir{color:var(--good)}
+.tneedle{transition:transform .12s ease-out;transform-origin:150px 150px}
+.tstrings{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.tstr{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 4px 10px;background:var(--ink);border:1px solid var(--line);border-radius:10px;cursor:pointer}
+.tstr:hover{border-color:var(--brass-dim)}
+.tstr .n{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:26px;line-height:1}
+.tstr .o{font-family:var(--f-mono);font-size:10px;color:var(--mute)}
+.tstr .w{font-family:var(--f-label);text-transform:uppercase;letter-spacing:.12em;font-size:10px;color:var(--mute)}
+.tstr[aria-pressed="true"]{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass) inset}
+.tstr.ok{border-color:var(--good)}
+.tstr.ok .w{color:var(--good)}
+.tmsg{margin:10px 0 0;color:var(--mute);font-size:13px;max-width:60ch}
+.tmsg.warn{color:var(--cream)}
+.tside{display:flex;flex-direction:column;gap:10px;min-width:0}
+.tside .row{flex-wrap:wrap}
+@media (max-width:760px){.tun-body{grid-template-columns:1fr}.tstrings{grid-template-columns:repeat(3,minmax(0,1fr))}}
 /* Stage */
 .stage{display:flex;gap:0;align-items:stretch;flex-wrap:wrap;background:linear-gradient(180deg,#151113,#0d0a0b);border:1px solid var(--line);border-radius:14px;padding:22px 18px 14px}
 .neck{flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:6px}
@@ -115,10 +155,10 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .strnames{display:none}
 
 /* Strum body */
-.bodywrap{flex:0 0 210px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.bodywrap{flex:0 0 clamp(190px,15vw,280px);display:flex;flex-direction:column;gap:6px;min-width:0}
 .body{position:relative;height:calc(var(--row)*6);background:var(--finish);border-radius:10px 50% 50% 10px / 10px 60% 60% 10px;margin-left:-2px;touch-action:none;cursor:ns-resize;overflow:hidden;
   box-shadow:inset 0 0 0 2px rgba(255,255,255,.08),inset 0 0 40px rgba(0,0,0,.45),0 10px 30px rgba(0,0,0,.6)}
-.body .hole{position:absolute;left:30px;top:50%;width:132px;height:132px;margin-top:-66px;border-radius:50%;background:radial-gradient(circle,#050303 0 52%,transparent 53%);box-shadow:0 0 0 7px rgba(0,0,0,.22),0 0 0 9px rgba(255,235,200,.22),0 0 0 12px rgba(0,0,0,.25)}
+.body .hole{position:absolute;left:14%;top:50%;width:calc(var(--row)*3.9);height:calc(var(--row)*3.9);margin-top:calc(var(--row)*-1.95);border-radius:50%;background:radial-gradient(circle,#050303 0 52%,transparent 53%);box-shadow:0 0 0 7px rgba(0,0,0,.22),0 0 0 9px rgba(255,235,200,.22),0 0 0 12px rgba(0,0,0,.25)}
 .body .pu{position:absolute;top:10%;bottom:10%;width:16px;border-radius:4px;background:linear-gradient(90deg,#141414,#2b2b2b,#141414);box-shadow:0 0 0 2px rgba(0,0,0,.35)}
 .body .pu.cream{background:linear-gradient(90deg,#e9e0c9,#fffaf0,#d8ceb5)}
 .body .pu.gold{box-shadow:0 0 0 2px #b08a3c,0 0 0 3px rgba(0,0,0,.4)}
@@ -137,7 +177,7 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 /* Pads */
 .padhead{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px}
 .padhead p{margin:0;color:var(--mute);font-size:13px}
-.pads{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.pads{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px}
 .pad{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 8px 10px;background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line);border-radius:12px;cursor:pointer;min-height:176px;transition:border-color .12s,transform .06s}
 .pad:hover{border-color:var(--brass-dim)}
 .pad:active,.pad.press{transform:translateY(1px) scale(.99)}
@@ -148,7 +188,8 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .pad .sh{font-family:var(--f-mono);font-size:10px;color:var(--mute);min-height:13px}
 .pad .kb{position:absolute;top:8px;right:9px;font-family:var(--f-mono);font-size:11px;color:var(--mute);border:1px solid var(--line);border-radius:4px;padding:0 5px}
 .pad svg{display:block;color:var(--cream)}
-.pad.custom{cursor:default}
+.pad.custom{cursor:default;padding-top:10px}
+.pad.custom .kb{top:auto;bottom:8px}
 .pad.custom .sel{display:flex;gap:4px;width:100%;justify-content:center}
 .pad.custom select{padding:4px 22px 4px 7px;font-size:12px;background-position:calc(100% - 12px) 52%,calc(100% - 7px) 52%}
 .pad.custom .go{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;border-radius:8px}
@@ -176,10 +217,10 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .lgroup{margin-bottom:14px}
 .lgroup h3{margin:0 0 8px;font-family:var(--f-label);font-weight:500;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--brass)}
 .lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
-.lcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:border-color .12s}
+.lcard{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:32px 6px 8px;background:var(--panel);border:1px solid var(--line);border-radius:10px;cursor:pointer;transition:border-color .12s}
 .lcard:hover{border-color:var(--brass-dim)}
 .lcard[aria-pressed="true"]{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass) inset}
-.lcard .cn{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:20px;line-height:1.1}
+.lcard .cn{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:20px;line-height:1.1;max-width:100%;text-align:center;overflow-wrap:anywhere}
 .lcard .sh{font-family:var(--f-mono);font-size:10px;color:var(--mute);min-height:12px}
 .lcard .add{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:var(--ink);color:var(--brass);cursor:pointer;font-size:15px;line-height:1;padding:0}
 .lcard .add:hover{border-color:var(--brass)}
@@ -187,13 +228,51 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .keys b{font-family:var(--f-mono);font-weight:500;color:var(--cream);border:1px solid var(--line);border-radius:4px;padding:0 5px;margin-right:4px}
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));translate:-50% 0;background:var(--panel-2);border:1px solid var(--brass-dim);padding:8px 14px;border-radius:999px;font-size:13px;transition:opacity .3s;pointer-events:none}
 
+@media (max-width:1100px){
+  .pads{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .keys{display:none}
+  .controls .adv{display:none}
+  .controls.showadv .adv{display:flex}
+  .controls.showadv #harmCtl[hidden]{display:none}
+  .morebtn{display:inline-block;align-self:flex-end}
+  .guitars{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;-webkit-overflow-scrolling:touch}
+  .gtr{flex:0 0 auto;scroll-snap-align:start;padding:8px 12px}
+  .gtr .sb{display:none}
+  .gtr .sw{width:26px;height:26px}
+}
+@media (max-width:900px){
+  .bodywrap{flex:1 1 100%;margin-top:14px}
+  .body{border-radius:12px;margin-left:0;height:120px}
+  .body .hole{left:50%;width:96px;height:96px;margin-left:-48px;margin-top:-48px}
+  .sline{right:0}
+  .body .bridge{display:none}
+  .hint{display:none}
+}
 @media (max-width:760px){
   :root{--row:30px}
-  .bodywrap{flex:1 1 100%;margin-top:14px}
-  .body{border-radius:12px;margin-left:0}
-  .body .hole{left:50%;margin-left:-55px;width:110px;height:110px;margin-top:-55px}
+  .wrap{gap:16px}
+  .brand h1{font-size:34px}
   .readout{width:100%;justify-content:space-between}
   .readout .meta{text-align:left}
+  .readout .chord{font-size:44px}
+  .stage{padding:14px 10px 10px}
+  .controls{gap:12px 16px;padding:12px}
+  .pad{min-height:0;padding:10px 6px 10px}
+  .pad svg,.pad .sh{display:none}
+  .pad .cn{font-size:24px}
+  .pad.custom .kb{display:none}
+  .lgrid{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+  .padhead p{display:none}
+  .lib .padhead p,.bank .padhead p{display:none}
+}
+@media (max-width:480px){
+  .pads{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .pad .rn{font-size:12px}
+  .pad .cn{font-size:20px}
+  .pad .kb{display:none}
+  .pad.custom{grid-column:1/-1;flex-direction:row;justify-content:center;gap:10px}
+  .pad.custom .sel{width:auto}
+  .pad.custom .go{width:auto;flex-direction:row}
 }
 @media (prefers-reduced-motion:reduce){
   .cell.hit .flash,.sline.vib{animation:none}
@@ -251,7 +330,7 @@ input[type=range]{width:110px;accent-color:var(--brass)}
         <button type="button" data-v="pow">Power</button>
       </div>
     </div>
-    <div class="ctl">
+    <div class="ctl adv">
       <span class="lab">Show on neck</span>
       <div class="seg" id="showSeg">
         <button type="button" data-v="chord">Chord</button>
@@ -259,21 +338,50 @@ input[type=range]{width:110px;accent-color:var(--brass)}
         <button type="button" data-v="both">Both</button>
       </div>
     </div>
-    <div class="ctl" id="harmCtl">
+    <div class="ctl adv" id="harmCtl">
       <span class="lab">Minor key</span>
       <label class="chk"><input type="checkbox" id="harmV"> Major V chord</label>
     </div>
-    <div class="ctl">
+    <div class="ctl adv">
       <label for="vol">Volume</label>
       <input type="range" id="vol" min="0" max="100" value="75">
     </div>
-    <div class="ctl">
+    <div class="ctl adv">
       <label for="rev">Room</label>
       <input type="range" id="rev" min="0" max="100" value="35">
     </div>
-    <div class="ctl">
+    <div class="ctl adv">
       <label for="spd">Strum speed</label>
       <input type="range" id="spd" min="0" max="70" value="24">
+    </div>
+    <div class="ctl">
+      <span class="lab">Tools</span>
+      <button type="button" class="tbtn" id="tunerBtn" aria-pressed="false" aria-controls="tuner">Tuner</button>
+    </div>
+    <button type="button" class="tbtn morebtn" id="moreBtn" aria-expanded="false">More settings</button>
+  </section>
+
+  <section class="tuner" id="tuner" hidden aria-label="Tuner">
+    <div class="tun-head">
+      <h2 class="section-lab">Tuner</h2>
+      <div class="row" style="flex-wrap:wrap;gap:10px 14px">
+        <div class="ctl"><label for="tuning">Tuning</label><select id="tuning"></select></div>
+        <div class="ctl"><span class="lab">Pitch A4</span><div class="row"><button type="button" class="step" id="a4Down" aria-label="Lower reference pitch">−</button><span class="capo-val" id="a4Val">440 Hz</span><button type="button" class="step" id="a4Up" aria-label="Raise reference pitch">+</button></div></div>
+        <div class="ctl"><span class="lab">Listen</span><button type="button" class="tbtn" id="micBtn">● Start mic</button></div>
+      </div>
+    </div>
+    <div class="tun-body">
+      <div class="gauge" id="gauge">
+        <svg viewBox="0 0 300 175" aria-hidden="true" id="gaugeSvg"></svg>
+        <div class="tnote" id="tNote">E<sub>2</sub></div>
+        <div class="tdir" id="tDir"></div>
+        <div class="tread" id="tRead">Waiting for sound</div>
+      </div>
+      <div class="tside">
+        <div class="tstrings" id="tStrings"></div>
+        <div class="row"><button type="button" class="tbtn" id="tAuto" aria-pressed="true">Auto-detect string</button><button type="button" class="tbtn" id="tPlayAll">Play all strings</button></div>
+        <p class="tmsg" id="tMsg">Tap a string to hear its target note and tune by ear, or start the mic and pluck a string.</p>
+      </div>
     </div>
   </section>
 
@@ -311,11 +419,14 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 
   <section class="lib">
     <div class="padhead">
-      <h2 class="section-lab">Chord library</h2>
+      <h2 class="section-lab" style="margin:0">Chord library</h2>
       <p>Pick a root note, then tap any chord to strum it.</p>
+      <button type="button" class="tbtn libtoggle" id="libToggle" aria-expanded="false" aria-controls="libBody"><span id="libToggleText">Show chord library</span> <span class="chev">▾</span></button>
     </div>
-    <div class="roots" id="roots" role="group" aria-label="Root note"></div>
-    <div id="lib"></div>
+    <div id="libBody" hidden>
+      <div class="roots" id="roots" role="group" aria-label="Root note"></div>
+      <div id="lib"></div>
+    </div>
   </section>
 
   <footer class="keys">
@@ -327,6 +438,7 @@ input[type=range]{width:110px;accent-color:var(--brass)}
     <span><b>A S D F G H</b> pick strings, low to high</span>
     <span><b>←</b><b>→</b> capo</span>
     <span><b>Esc</b> mute</span>
+    <span><b>T</b> tuner</span>
   </footer>
 </div>
 <div class="toast" id="toast" style="opacity:0"></div>
@@ -451,12 +563,12 @@ function buildPads(){
 
 // ---------- mini chord diagram ----------
 function diagram(shape){
-  const W=70,H=78,x0=10,dx=10,y0=18,dy=13;
+  const x0=10,dx=10,y0=18,dy=13;
   const fretted=shape.filter(f=>f>0), mx=fretted.length?Math.max(...fretted):0, mn=fretted.length?Math.min(...fretted):0;
-  const base=mx<=4?1:mn;
+  const base=mx<=4?1:mn, rows=Math.min(6,Math.max(4,mx-base+1)), W=70, H=y0+rows*dy+8;
   let s=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" aria-hidden="true">`;
-  for(let i=0;i<6;i++) s+=`<line x1="${x0+i*dx}" y1="${y0}" x2="${x0+i*dx}" y2="${y0+4*dy}" stroke="currentColor" stroke-opacity=".55" stroke-width="1"/>`;
-  for(let j=0;j<=4;j++) s+=`<line x1="${x0}" y1="${y0+j*dy}" x2="${x0+5*dx}" y2="${y0+j*dy}" stroke="currentColor" stroke-opacity="${j===0&&base===1?1:.4}" stroke-width="${j===0&&base===1?3:1}"/>`;
+  for(let i=0;i<6;i++) s+=`<line x1="${x0+i*dx}" y1="${y0}" x2="${x0+i*dx}" y2="${y0+rows*dy}" stroke="currentColor" stroke-opacity=".55" stroke-width="1"/>`;
+  for(let j=0;j<=rows;j++) s+=`<line x1="${x0}" y1="${y0+j*dy}" x2="${x0+5*dx}" y2="${y0+j*dy}" stroke="currentColor" stroke-opacity="${j===0&&base===1?1:.4}" stroke-width="${j===0&&base===1?3:1}"/>`;
   if(base>1) s+=`<text x="${x0+5*dx+4}" y="${y0+dy*.75}" font-size="9" fill="currentColor" fill-opacity=".7" font-family="IBM Plex Mono,monospace">${base}</text>`;
   // barre
   const atMin=shape.map((f,i)=>f===mn&&mn>0?i:-1).filter(i=>i>=0);
@@ -847,6 +959,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='ArrowLeft'){e.preventDefault(); setCapo(S.capo-1);}
   if(e.key==='ArrowRight'){e.preventDefault(); setCapo(S.capo+1);}
   if(e.key==='Escape'){muteAll();}
+  if(e.code==='KeyT'){e.preventDefault(); toggleTuner();}
 });
 
 let tt; function toast(msg){const t=$('toast'); t.textContent=msg; t.style.opacity=1; clearTimeout(tt); tt=setTimeout(()=>t.style.opacity=0,2400);}
@@ -855,6 +968,136 @@ let tt; function toast(msg){const t=$('toast'); t.textContent=msg; t.style.opaci
 const mq=window.matchMedia('(max-width:600px)');
 function fitFrets(){ const n=mq.matches?12:15; if(n!==FRETS){FRETS=n; refresh();} }
 mq.addEventListener?mq.addEventListener('change',fitFrets):mq.addListener(fitFrets);
+
+// ---------- tuner ----------
+const TUNINGS=[
+  ['Standard (E A D G B E)',[40,45,50,55,59,64]],
+  ['Drop D (D A D G B E)',[38,45,50,55,59,64]],
+  ['Half step down (E♭)',[39,44,49,54,58,63]],
+  ['Full step down (D standard)',[38,43,48,53,57,62]],
+  ['Drop C (C G C F A D)',[36,43,48,53,57,62]],
+  ['DADGAD',[38,45,50,55,57,62]],
+  ['Open G (D G D G B D)',[38,43,50,55,59,62]],
+  ['Open D (D A D F♯ A D)',[38,45,50,54,57,62]],
+  ['Open E (E B E G♯ B E)',[40,47,52,56,59,64]]
+];
+const T={open:false,tuning:0,a4:440,lock:-1,mic:null,an:null,buf:null,raf:0,hist:[],ok:[0,0,0,0,0,0],okSince:[0,0,0,0,0,0],last:0};
+try{const tv=JSON.parse(localStorage.getItem('velvetfret-tuner')||'null'); if(tv){T.tuning=tv.tuning|0; T.a4=tv.a4||440;}}catch(e){}
+if(!TUNINGS[T.tuning]) T.tuning=0;
+const tsave=()=>{try{localStorage.setItem('velvetfret-tuner',JSON.stringify({tuning:T.tuning,a4:T.a4}));}catch(e){}};
+const mfreq=m=>T.a4*2**((m-69)/12);
+const sharpName=m=>NS[mod(m)];
+const octave=m=>Math.floor(m/12)-1;
+function buildGauge(){
+  const cx=150,cy=150,R=118; let h='';
+  const ang=c=>(-60+c*1.2)*Math.PI/180;
+  const pt=(c,r)=>[cx+r*Math.sin(ang(c)),cy-r*Math.cos(ang(c))];
+  const arc=(c0,c1,r)=>{const [x0,y0]=pt(c0,r),[x1,y1]=pt(c1,r);return `M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`;};
+  h+=`<path d="${arc(-50,50,R)}" fill="none" stroke="var(--line)" stroke-width="10" stroke-linecap="round"/>`;
+  h+=`<path d="${arc(-5,5,R)}" fill="none" stroke="var(--good)" stroke-width="10"/>`;
+  for(let c=-50;c<=50;c+=5){const big=c%25===0,[x0,y0]=pt(c,R-12),[x1,y1]=pt(c,R-(big?26:18));h+=`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="var(--mute)" stroke-width="${big?2:1}"/>`;}
+  for(const c of [-50,-25,0,25,50]){const [x,y]=pt(c,R+16);h+=`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" text-anchor="middle" font-size="11" fill="var(--mute)" font-family="IBM Plex Mono,monospace">${c>0?'+':''}${c}</text>`;}
+  h+=`<g class="tneedle" id="tNeedle"><line x1="150" y1="150" x2="150" y2="${150-R+8}" stroke="var(--brass)" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="150" r="7" fill="var(--brass)"/></g>`;
+  $('gaugeSvg').innerHTML=h;
+}
+function renderTuner(){
+  $('tuning').innerHTML=TUNINGS.map((t,i)=>`<option value="${i}"${i===T.tuning?' selected':''}>${t[0]}</option>`).join('');
+  $('a4Val').textContent=T.a4+' Hz';
+  const notes=TUNINGS[T.tuning][1];
+  $('tStrings').innerHTML=notes.map((m,i)=>`<button type="button" class="tstr${T.ok[i]?' ok':''}" data-ts="${i}" aria-pressed="${T.lock===i}"><span class="n">${sharpName(m)}</span><span class="o">${sharpName(m)}${octave(m)} · ${mfreq(m).toFixed(1)} Hz</span><span class="w">${T.ok[i]?'In tune':'String '+(6-i)}</span></button>`).join('');
+  $('tAuto').setAttribute('aria-pressed',T.lock<0);
+}
+function refTone(m,t){
+  initAudio(); if(!ctx) return;
+  const src=ctx.createBufferSource(); src.buffer=ksBuffer(m); src.playbackRate.value=T.a4/440;
+  const g=ctx.createGain(); g.gain.value=.8; src.connect(g).connect(master); src.start(t??ctx.currentTime+.01);
+}
+$('tStrings').addEventListener('click',e=>{const b=e.target.closest('[data-ts]'); if(!b) return; const i=+b.dataset.ts; T.lock=i; refTone(TUNINGS[T.tuning][1][i]); renderTuner(); if(!T.mic) showTarget(i);});
+$('tAuto').onclick=()=>{T.lock=-1; renderTuner();};
+$('tPlayAll').onclick=()=>{initAudio(); if(!ctx) return; const t0=ctx.currentTime+.02; TUNINGS[T.tuning][1].forEach((m,i)=>refTone(m,t0+i*.55));};
+$('tuning').onchange=e=>{T.tuning=+e.target.value; T.ok=[0,0,0,0,0,0]; tsave(); renderTuner();};
+$('a4Down').onclick=()=>{T.a4=Math.max(430,T.a4-1); tsave(); renderTuner();};
+$('a4Up').onclick=()=>{T.a4=Math.min(450,T.a4+1); tsave(); renderTuner();};
+function showTarget(i){ const m=TUNINGS[T.tuning][1][i]; $('tNote').innerHTML=`${sharpName(m)}<sub>${octave(m)}</sub>`; $('tRead').textContent=`Target ${mfreq(m).toFixed(1)} Hz`; $('tDir').textContent=''; setNeedle(0,false); }
+function setNeedle(c,show){ const n=$('tNeedle'); if(!n) return; n.style.transform=`rotate(${Math.max(-50,Math.min(50,c))*1.2}deg)`; n.style.opacity=show?1:.35; }
+function tmsg(t,warn){ const el=$('tMsg'); el.textContent=t; el.classList.toggle('warn',!!warn); }
+async function startMic(){
+  if(T.mic){ stopMic(); return; }
+  initAudio(); if(!ctx) return;
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ tmsg('This browser can’t use the microphone here. Tap a string above to tune by ear instead.',true); return; }
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const srcN=ctx.createMediaStreamSource(stream), an=ctx.createAnalyser(); an.fftSize=4096; srcN.connect(an);
+    T.mic={stream,srcN}; T.an=an; T.buf=new Float32Array(an.fftSize); T.hist=[];
+    $('micBtn').textContent='■ Stop mic'; $('micBtn').classList.add('live');
+    tmsg('Listening. Pluck one string at a time and let it ring.');
+    loopTuner();
+  }catch(err){
+    tmsg('The microphone is blocked on this page. Claude’s preview doesn’t allow mic access, so open your own copy (for example on GitHub Pages) to use the live tuner. You can still tap a string to tune by ear.',true);
+  }
+}
+function stopMic(){
+  if(!T.mic) return; cancelAnimationFrame(T.raf);
+  T.mic.stream.getTracks().forEach(t=>t.stop()); try{T.mic.srcN.disconnect();}catch(e){}
+  T.mic=null; T.an=null; $('micBtn').textContent='● Start mic'; $('micBtn').classList.remove('live');
+  $('gauge').classList.remove('good'); setNeedle(0,false); $('tDir').textContent=''; $('tRead').textContent='Mic off';
+}
+$('micBtn').onclick=startMic;
+// YIN pitch detection
+function detect(buf,sr){
+  let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/buf.length);
+  if(rms<.008) return -1;
+  const W=1024, maxT=Math.min(buf.length-W-1,Math.floor(sr/55)), minT=Math.floor(sr/1100);
+  const d=new Float32Array(maxT+1); let run=0;
+  for(let t=1;t<=maxT;t++){ let s=0; for(let i=0;i<W;i++){ const x=buf[i]-buf[i+t]; s+=x*x; } run+=s; d[t]=run?s*t/run:1; }
+  let tau=-1;
+  for(let t=minT;t<maxT;t++){ if(d[t]<.12){ while(t+1<maxT&&d[t+1]<d[t]) t++; tau=t; break; } }
+  if(tau<0){ let best=1,bt=-1; for(let t=minT;t<maxT;t++) if(d[t]<best){best=d[t];bt=t;} if(best>.3) return -1; tau=bt; }
+  const a=d[tau-1],b=d[tau],c=d[tau+1], den=a-2*b+c; const shift=den?(a-c)/(2*den):0;
+  return sr/(tau+shift);
+}
+function loopTuner(){
+  if(!T.an) return;
+  T.raf=requestAnimationFrame(loopTuner);
+  T.an.getFloatTimeDomainData(T.buf);
+  const f=detect(T.buf,ctx.sampleRate), now=performance.now();
+  if(f<=0){ if(now-T.last>900){ $('gauge').classList.remove('good'); setNeedle(0,false); $('tDir').textContent=''; $('tRead').textContent='Listening…'; T.hist=[]; } return; }
+  T.hist.push(f); if(T.hist.length>5) T.hist.shift();
+  const fm=[...T.hist].sort((x,y)=>x-y)[Math.floor(T.hist.length/2)];
+  T.last=now;
+  const notes=TUNINGS[T.tuning][1];
+  const midiF=69+12*Math.log2(fm/T.a4);
+  let si=T.lock;
+  if(si<0){ let best=1e9; notes.forEach((m,i)=>{const d=Math.abs(midiF-m); if(d<best){best=d;si=i;}}); if(best>2.5) si=-1; }
+  let target, cents;
+  if(si>=0){ target=notes[si]; cents=(midiF-target)*100; }
+  else { target=Math.round(midiF); cents=(midiF-target)*100; }
+  const near=Math.round(midiF);
+  $('tNote').innerHTML=`${sharpName(near)}<sub>${octave(near)}</sub>`;
+  const good=Math.abs(cents)<=4 && near===target;
+  $('gauge').classList.toggle('good',good);
+  setNeedle(cents,true);
+  const shown=Math.abs(cents)>99?'far off':`${cents>0?'+':''}${cents.toFixed(0)} cents`;
+  $('tRead').textContent=`${fm.toFixed(1)} Hz · ${shown}`+(si>=0?` · string ${6-si}`:'');
+  $('tDir').textContent=si<0?'':good?'In tune':(cents<0?'Tighten · tune up':'Loosen · tune down');
+  if(si>=0){
+    if(good){ if(!T.okSince[si]) T.okSince[si]=now; if(now-T.okSince[si]>500&&!T.ok[si]){T.ok[si]=1; renderTuner();} }
+    else T.okSince[si]=0;
+  }
+}
+function toggleTuner(force){
+  T.open=force??!T.open; $('tuner').hidden=!T.open; $('tunerBtn').setAttribute('aria-pressed',T.open);
+  if(!T.open) stopMic(); else { renderTuner(); if(!T.mic) showTarget(T.lock>=0?T.lock:0); $('tuner').scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+$('tunerBtn').onclick=()=>toggleTuner();
+buildGauge(); renderTuner();
+
+// ---------- collapsible library + more settings ----------
+let libOpen=false; try{ libOpen=localStorage.getItem('velvetfret-lib')==='1'; }catch(e){}
+function setLib(open){ libOpen=open; $('libBody').hidden=!open; $('libToggle').setAttribute('aria-expanded',open); $('libToggleText').textContent=open?'Hide chord library':'Show chord library'; try{localStorage.setItem('velvetfret-lib',open?'1':'0');}catch(e){} }
+$('libToggle').onclick=()=>setLib(!libOpen);
+setLib(libOpen);
+$('moreBtn').onclick=()=>{ const c=document.querySelector('.controls'); const on=c.classList.toggle('showadv'); $('moreBtn').setAttribute('aria-expanded',on); $('moreBtn').textContent=on?'Fewer settings':'More settings'; };
 
 // boot
 FRETS=mq.matches?12:15;

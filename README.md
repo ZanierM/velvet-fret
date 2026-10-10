@@ -8,6 +8,7 @@ A playable guitar and drum kit in the browser. No install, no build step: open `
 - Chord library: 12 roots × 22 chord types, with diagrams
 - My chords: save up to 10 chords to keys Q–P
 - Play single notes on the fretboard or strum by dragging across the body
+- Tuner: live microphone tuner (needs a page served over https, such as GitHub Pages) plus reference tones, 9 tunings and adjustable A4
 
 ## Drums (`drums.html`)
 - Top-down drum kit you can tap, or play from the keyboard
