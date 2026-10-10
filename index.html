@@ -52,13 +52,6 @@ button,select,input{font:inherit;color:inherit}
 
 /* Guitar picker */
 .section-lab{font-family:var(--f-label);text-transform:uppercase;letter-spacing:.2em;font-size:12px;color:var(--mute);margin:0 0 10px;font-weight:500}
-.guitars{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.gtr{display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;cursor:pointer;text-align:left;transition:border-color .15s,background .15s}
-.gtr:hover{border-color:var(--brass-dim)}
-.gtr[aria-pressed="true"]{border-color:var(--brass);background:var(--panel-2);box-shadow:0 0 0 1px var(--brass) inset}
-.gtr .sw{width:34px;height:34px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 2px 6px rgba(0,0,0,.5)}
-.gtr .nm{font-family:var(--f-label);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:16px;line-height:1.1}
-.gtr .sb{color:var(--mute);font-size:12px}
 
 /* Control bar */
 .controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -79,6 +72,9 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .chk{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--cream);cursor:pointer;padding-block:7px}
 .chk input{accent-color:var(--brass)}
 
+/* Guitar dropdown */
+.gsw{width:30px;height:30px;border-radius:50%;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 2px 6px rgba(0,0,0,.5)}
+#gtrSel{min-width:0;max-width:min(320px,70vw)}
 /* Collapsible library + compact settings */
 .libtoggle{display:inline-flex;align-items:center;gap:8px}
 .libtoggle .chev{display:inline-block;transition:rotate .15s}
@@ -235,10 +231,6 @@ input[type=range]{width:110px;accent-color:var(--brass)}
   .controls.showadv .adv{display:flex}
   .controls.showadv #harmCtl[hidden]{display:none}
   .morebtn{display:inline-block;align-self:flex-end}
-  .guitars{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-  .gtr{flex:0 0 auto;scroll-snap-align:start;padding:8px 12px}
-  .gtr .sb{display:none}
-  .gtr .sw{width:26px;height:26px}
 }
 @media (max-width:900px){
   /* body stays beside the neck so the strings run straight on; strum buttons go full width underneath */
@@ -302,12 +294,11 @@ input[type=range]{width:110px;accent-color:var(--brass)}
     </div>
   </header>
 
-  <section>
-    <h2 class="section-lab">Choose your guitar</h2>
-    <div class="guitars" id="guitars"></div>
-  </section>
-
   <section class="controls" aria-label="Settings">
+    <div class="ctl">
+      <label for="gtrSel">Guitar</label>
+      <div class="row"><span class="gsw" id="gsw" aria-hidden="true"></span><select id="gtrSel"></select></div>
+    </div>
     <div class="ctl">
       <label for="keyRoot">Key</label>
       <div class="row">
@@ -591,11 +582,12 @@ function diagram(shape){
 
 // ---------- render: guitars ----------
 function renderGuitars(){
-  $('guitars').innerHTML=Object.entries(GUITARS).map(([k,g])=>`<button type="button" class="gtr" data-g="${k}" aria-pressed="${k===S.guitar}"><span class="sw" style="background:${g.finish}"></span><span><span class="nm">${g.name}</span><br><span class="sb">${g.sub}</span></span></button>`).join('');
+  const sel=$('gtrSel');
+  if(!sel.options.length) sel.innerHTML=Object.entries(GUITARS).map(([k,g])=>`<option value="${k}">${g.name} · ${g.sub}</option>`).join('');
+  sel.value=S.guitar; $('gsw').style.background=GUITARS[S.guitar].finish;
 }
-$('guitars').addEventListener('click',e=>{
-  const b=e.target.closest('.gtr'); if(!b) return;
-  S.guitar=b.dataset.g; save(); renderGuitars(); applyGuitar(); if(ctx){buildChain(); prewarm();}
+$('gtrSel').addEventListener('change',e=>{
+  S.guitar=e.target.value; save(); renderGuitars(); applyGuitar(); if(ctx){buildChain(); prewarm();}
   if(ctx){ strum('down'); }
 });
 
@@ -1029,28 +1021,40 @@ async function startMic(){
   if(T.mic){ stopMic(); return; }
   initAudio(); if(!ctx) return;
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){ tmsg('This browser can’t use the microphone here. Tap a string above to tune by ear instead.',true); return; }
+  try{ if(navigator.audioSession) navigator.audioSession.type='play-and-record'; }catch(e){}
   try{
-    const stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    let stream;
+    try{ stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}}); }
+    catch(e1){ if(e1&&e1.name==='NotAllowedError') throw e1; stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
+    if(ctx.state!=='running') await ctx.resume().catch(()=>{});
     const srcN=ctx.createMediaStreamSource(stream), an=ctx.createAnalyser(); an.fftSize=4096; srcN.connect(an);
+    const keep=ctx.createGain(); keep.gain.value=0; an.connect(keep).connect(ctx.destination);
     T.mic={stream,srcN}; T.an=an; T.buf=new Float32Array(an.fftSize); T.hist=[];
     $('micBtn').textContent='■ Stop mic'; $('micBtn').classList.add('live');
     tmsg('Listening. Pluck one string at a time and let it ring.');
     loopTuner();
   }catch(err){
-    tmsg('The microphone is blocked on this page. Claude’s preview doesn’t allow mic access, so open your own copy (for example on GitHub Pages) to use the live tuner. You can still tap a string to tune by ear.',true);
+    try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+    const framed=window.top!==window.self;
+    const name=err&&err.name;
+    tmsg(framed?'The microphone is blocked inside Claude’s preview. Open the GitHub Pages copy to use the live tuner. You can still tap a string to tune by ear.'
+      :name==='NotAllowedError'?'Microphone access was refused. On iPhone, tap the aA button in Safari, choose Website Settings and set Microphone to Allow, then try again. On Android, tap the icon left of the address and allow the microphone.'
+      :name==='NotFoundError'?'No microphone was found on this device.'
+      :'The microphone couldn’t start ('+(name||'unknown error')+'). Close other apps using the mic and try again.',true);
   }
 }
 function stopMic(){
   if(!T.mic) return; cancelAnimationFrame(T.raf);
   T.mic.stream.getTracks().forEach(t=>t.stop()); try{T.mic.srcN.disconnect();}catch(e){}
-  T.mic=null; T.an=null; $('micBtn').textContent='● Start mic'; $('micBtn').classList.remove('live');
+  T.mic=null; T.an=null; try{ if(navigator.audioSession) navigator.audioSession.type='playback'; }catch(e){}
+  $('micBtn').textContent='● Start mic'; $('micBtn').classList.remove('live');
   $('gauge').classList.remove('good'); setNeedle(0,false); $('tDir').textContent=''; $('tRead').textContent='Mic off';
 }
 $('micBtn').onclick=startMic;
 // YIN pitch detection
 function detect(buf,sr){
   let rms=0; for(let i=0;i<buf.length;i++) rms+=buf[i]*buf[i]; rms=Math.sqrt(rms/buf.length);
-  if(rms<.008) return -1;
+  if(rms<.0025) return -1;
   const W=1024, maxT=Math.min(buf.length-W-1,Math.floor(sr/55)), minT=Math.floor(sr/1100);
   const d=new Float32Array(maxT+1); let run=0;
   for(let t=1;t<=maxT;t++){ let s=0; for(let i=0;i<W;i++){ const x=buf[i]-buf[i+t]; s+=x*x; } run+=s; d[t]=run?s*t/run:1; }
