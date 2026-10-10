@@ -6,6 +6,8 @@ A playable guitar and drum kit in the browser. No install, no build step: open `
 - Six guitars: Dreadnought, Classical, Twelve-String, Glass Single-Coil, Cherry Crunch, Midnight Lead
 - Pick a key (major or minor) and a capo; chord pads show the chords in that key, with shapes adjusted for the capo
 - Chord library: 12 roots × 22 chord types, with diagrams
+- Chord positions: every chord can be played in several places up the neck (open, 5th fret, 7th fret and so on)
+- All notes view: every fret labelled with its note name
 - My chords: save up to 10 chords to keys Q–P
 - Play single notes on the fretboard or strum by dragging across the body
 - Tuner: live microphone tuner (needs a page served over https, such as GitHub Pages) plus reference tones, 9 tunings and adjustable A4

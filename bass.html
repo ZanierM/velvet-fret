@@ -93,6 +93,8 @@ input[type=range]{width:110px;accent-color:var(--brass)}
 .cell.scale.tonic .dot{box-shadow:inset 0 0 0 2px var(--brass);color:var(--brass)}
 .cell.tone .dot{opacity:1;transform:scale(.9);background:var(--cream);color:var(--ink)}
 .cell.tone.root .dot{background:var(--brass);color:var(--ink);transform:scale(1)}
+.cell.note .dot{opacity:.6;transform:scale(.72);background:transparent;color:var(--cream);font-size:11px;box-shadow:inset 0 0 0 1px rgba(238,230,213,.35)}
+.cell.note.tonic .dot{opacity:1;color:var(--brass);box-shadow:inset 0 0 0 1.5px var(--brass)}
 .cell.held .dot{box-shadow:0 0 0 3px var(--oxblood)}
 .cell .flash{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;border:2px solid var(--brass);opacity:0;pointer-events:none;z-index:4}
 .cell.hit .flash{animation:ring .45s ease-out}
@@ -205,7 +207,7 @@ input[type=range]{width:110px;accent-color:var(--brass)}
     </div>
     <div class="ctl adv">
       <span class="lab">Show on neck</span>
-      <div class="seg" id="showSeg"><button type="button" data-v="tones">Chord notes</button><button type="button" data-v="scale">Scale</button><button type="button" data-v="off">Off</button></div>
+      <div class="seg" id="showSeg"><button type="button" data-v="tones">Chord notes</button><button type="button" data-v="scale">Scale</button><button type="button" data-v="all">All notes</button><button type="button" data-v="off">Off</button></div>
     </div>
     <div class="ctl adv">
       <label for="vol">Volume</label>
@@ -378,6 +380,7 @@ function paint(){
     c.className='cell'+(f===0?' open':''); dot.textContent='';
     if(S.show==='tones'&&chord&&tones.includes(pc)){ c.classList.add('tone'); if(pc===chord.root) c.classList.add('root'); dot.textContent=nm(pc); }
     else if(S.show==='scale'&&sc.includes(pc)){ c.classList.add('scale'); if(pc===S.key) c.classList.add('tonic'); dot.textContent=nm(pc); }
+    else if(S.show==='all'){ c.classList.add('note'); if(chord&&pc===chord.root) c.classList.add('tonic'); dot.textContent=nm(pc); }
     if(held[s]===f&&f>0){ c.classList.add('held'); if(!dot.textContent){ c.classList.add('tone'); dot.textContent=nm(pc);} }
   }
 }
