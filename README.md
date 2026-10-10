@@ -10,6 +10,12 @@ A playable guitar and drum kit in the browser. No install, no build step: open `
 - Play single notes on the fretboard or strum by dragging across the body
 - Tuner: live microphone tuner (needs a page served over https, such as GitHub Pages) plus reference tones, 9 tunings and adjustable A4
 
+## Bass (`bass.html`)
+- Six basses: P-Bass, J-Bass, Fretless, Rock Pick, Upright and Synth Bass
+- Four or five strings; fingers, pick or slap
+- Chord pads in any key play bass lines (rock eighths, root and fifth, octaves, arpeggio, walking, Motown, gallop) once or on a loop at your tempo
+- Tap frets to play notes, or pluck the strings on the body
+
 ## Drums (`drums.html`)
 - Top-down drum kit you can tap, or play from the keyboard
 - Kits: Studio Rock, Vintage '70s, Arena (recorded) and Eight-Oh-Eight (synthesised)
